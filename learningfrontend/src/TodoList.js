@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import TodoItem from './TodoItem';
 import TodoInput from './TodoInput';
 import * as apiCalls from './api';
-const APIURL = 'http://167.99.180.165/api/todos';
 
 class TodoList extends Component {
     constructor(props) {
@@ -16,16 +15,16 @@ class TodoList extends Component {
         this.loadTodos();
     }
     loadTodos(){
-        fetch(APIURL)
+        fetch(this.props.apiurl)
         .then(data => data.json())
         .then(todos => this.setState({todos}));
     }
     async addTodo (newTodo) {
-        let addedTodo = await apiCalls.postTodo(newTodo);
+        let addedTodo = await apiCalls.postTodo(this.props.apiurl, {name: newTodo});
         this.setState({todos: [...this.state.todos, addedTodo]});
     }
     async deleteTodo (goneTodoId) {
-        await apiCalls.destroyTodo(goneTodoId);
+        await apiCalls.destroyTodo(this.props.apiurl, goneTodoId);
         const todos = this.state.todos.filter(todo => todo._id !==goneTodoId);
         this.setState({todos: todos});
     }
@@ -34,7 +33,7 @@ class TodoList extends Component {
             <TodoItem
               key={t._id}
               {...t}
-              onDelete={this.deleteTodo.bind(this,t._id)}
+              onDelete={this.deleteTodo.bind(this, t._id)}
             />
             ));
         

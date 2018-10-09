@@ -1,17 +1,24 @@
 import axios from 'axios';
-const APIURL = 'http://167.99.180.165/api/todos';
 
-export async function postTodo(newTodo) {
-    return axios.post(APIURL, newTodo)
+export async function postTodo(apiurl, newTodo) {
+    return axios.post(apiurl, newTodo)
     .then(data => data.data)
     .catch(function (error) {
         console.log(error);
     });
 }
 
-export async function destroyTodo(goneTodoId) {
-    return axios.delete(`${APIURL}/${goneTodoId}`)
+export async function destroyTodo(apiurl, goneTodoId) {
+    return axios.delete(`${apiurl}/${goneTodoId}`)
     .then(data => data)
+    .catch(function (error) {
+        console.log(error);
+    });
+}
+
+export async function postTodoList(apiurl, newTodoList) {
+    return axios.post(apiurl, newTodoList)
+    .then(data => data.data)
     .catch(function (error) {
         console.log(error);
     });
