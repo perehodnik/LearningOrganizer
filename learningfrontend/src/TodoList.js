@@ -40,8 +40,11 @@ class TodoList extends Component {
         return(
             <div id="container">
                 <ul>
-                    <h1>To Do List</h1>
-                    <TodoInput handleEnter={this.addTodo}/>
+                    <h1>{this.props.name}</h1>
+                    <TodoInput 
+                        handleEnter={this.addTodo}
+                        placeholder="todo"
+                    />
                     {todos}
                 </ul>
             </div>

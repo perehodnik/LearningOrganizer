@@ -14,7 +14,7 @@ class TodoInput extends Component {
     }
     render() {        
         return(
-             <input placeHolder="add new item"
+             <input placeHolder={`add new ${this.props.placeholder}`}
              type="text" 
              onKeyPress={this.handleKeyPress}
              />

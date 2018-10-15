@@ -46,10 +46,6 @@ ul {
 	opacity: 0.9;
 }
 
-.fa-plus {
-	float: right;
-}
-
 li:nth-child(2n){
 	background: #f7f7f7;
 }
@@ -75,4 +71,24 @@ input:focus{
 	background: #fff;
 	border: 3px solid #2980b9;
 	outline: none;
+}
+
+#sidebar-div {
+	padding: 10px;
+	width: 40%;
+	background: #f0f0f0;
+}
+
+#content-div { 
+	flex: 1;
+	padding: 10px;
+}
+#nav-list i {
+	float: right;
+	color: #706e61;
+	margin-top: 12px;
+	margin-right: 10px;
+}
+#nav-list i:hover {
+	color: #e74c3c;
 }

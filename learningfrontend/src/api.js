@@ -23,3 +23,11 @@ export async function postTodoList(apiurl, newTodoList) {
         console.log(error);
     });
 }
+
+export async function destroyTodoList(apiurl, goneTodoListId) {
+    return axios.delete(`${apiurl}/${goneTodoListId}`)
+    .then(data => data)
+    .catch(function (error) {
+        console.log(error);
+    });
+}

@@ -14,15 +14,20 @@ class Sidebar extends Component {
   constructor(props) {
       super(props);
       this.state = {
-          routes: [
-            {
-              name: "Home",
-              path: "/",
-              exact: true,
-              sidebar: () => <TodoInput handleEnter={this.addTodoList}/>,
-              main: () => <h2>Home</h2>
-            }
-          ]
+          main: {
+            name: "Home",
+            path: "/",
+            exact: true,
+            sidebar: () => "",
+            main: () => <div>
+                          <h2>Home</h2>
+                          <TodoInput 
+                            handleEnter={this.addTodoList}
+                            placeholder="todolist"
+                          />
+                        </div>
+          },
+          routes: []
       }
       this.apiurl = 'http://167.99.180.165/api/todolists';
       this.addTodoList = this.addTodoList.bind(this);
@@ -39,8 +44,12 @@ class Sidebar extends Component {
           name: list.todoListName,
           path: `/${list.todoListName}`,
           exact: true,
-          sidebar: () => <div>{list.todoListName}</div>,
-          main: () => <TodoList apiurl={`http://167.99.180.165/api/todolists/${list._id}`} />
+          sidebar: () => <div>{list._id}</div>,
+          main: () => <TodoList 
+              apiurl={`http://167.99.180.165/api/todolists/${list._id}`}
+              name={list.todoListName}
+          />,
+          id: list._id
         }
       ))))
     .then(todoListArray => this.setState({routes: [...this.state.routes, ...todoListArray]}));
@@ -57,28 +66,35 @@ class Sidebar extends Component {
     }
     this.setState({routes: [...this.state.routes, addedTodoList]});
   }
+  async deleteTodoList (goneTodoListId) {
+    await apiCalls.destroyTodoList(this.apiurl, goneTodoListId);
+    const routes = this.state.routes.filter(route => route.id !==goneTodoListId);
+    this.setState({routes});
+  }
 
   render() {
     const routes = this.state.routes;
+    const mainPage = this.state.main;
     
     return(
         <Router>
             <div style={{ display: "flex" }}>
-              <div
-                style={{
-                  padding: "10px",
-                  width: "40%",
-                  background: "#f0f0f0"
-                }}
-              >
+              <div id="sidebar-div">
                 <ul style={{ listStyleType: "none", padding: 0 }}>
+                  <li id="nav-list">
+                    <Link to={mainPage.path}>
+                      {mainPage.name}
+                    </Link>
+                  </li>
                   {routes.map((route, index) => (
-                    <li>
+                    <li id="nav-list">
                       <Link to={route.path}>
                         {route.name}
                       </Link>
+                      <i onClick={this.deleteTodoList.bind(this, route.id)} className="fa fa-trash"></i>
                     </li>
                   ))}
+
                 </ul>
 
                 {routes.map((route, index) => (
@@ -91,7 +107,12 @@ class Sidebar extends Component {
                 ))}
               </div>
 
-              <div style={{ flex: 1, padding: "10px" }}>
+              <div id="content-div">
+                <Route
+                    path={mainPage.path}
+                    exact={mainPage.exact}
+                    component={mainPage.main}
+                />
                 {routes.map((route, index) => (
                   <Route
                     key={index}
