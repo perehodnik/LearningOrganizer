@@ -1,8 +1,15 @@
 @import url("https://use.fontawesome.com/releases/v5.3.1/css/all.css");
 
+html {
+	height: 100%;
+  }
+
 body {
 	background-image: url("https://source.unsplash.com/featured/?nature,water");
 	background-size: cover;
+	height:  100%;
+    margin:  0px auto;
+    padding: 0px auto;
 }
 
 h1 {
@@ -38,6 +45,15 @@ ul {
 	padding: 0;
 }
 
+.App {
+	height: 100%;
+}
+
+#root {
+	height: 100%;
+}
+
+
 #container {
 	width: 360px;
 	margin: 100px auto;
@@ -51,6 +67,7 @@ li:nth-child(2n){
 }
 
 li {
+	padding-left: 5px;
 	background: #fff;
 	height: 40px;
 	line-height: 40px;
@@ -73,15 +90,21 @@ input:focus{
 	outline: none;
 }
 
-#sidebar-div {
-	padding: 10px;
-	width: 40%;
-	background: #f0f0f0;
+.sidebar-div {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	background: #151b26;
+	flex-shrink: 0;
 }
 
+#todolists {
+	flex-grow: 1;
+	overflow-y: auto;
+	padding: 20px;
+}
 #content-div { 
-	flex: 1;
-	padding: 10px;
+	height: 100%;
 }
 #nav-list i {
 	float: right;
@@ -91,4 +114,34 @@ input:focus{
 }
 #nav-list i:hover {
 	color: #e74c3c;
+}
+
+.main-div {
+	height: 100%;
+	overflow: hidden;
+	margin: 0px;
+	display: flex;
+  }
+.column {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	flex:1 1;
+}
+#left {
+	width: 150px;
+	max-width: 500px;
+	background-color: rgb(69, 50, 104);
+}
+.bottom {
+	flex-grow: 1;
+	overflow-y: auto;
+	padding: 20px;
+}
+
+.bottom ul {
+	list-style-type:"none";
+	padding: 0;
+	border: #706e61;
+	border-radius: 20%;
 }

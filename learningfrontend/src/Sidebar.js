@@ -4,12 +4,6 @@ import TodoList from './TodoList';
 import TodoInput from './TodoInput';
 import * as apiCalls from './api';
 
-// Each logical "route" has two components, one for
-// the sidebar and one for the main area. We want to
-// render both of them in different places when the
-// path matches the current URL.
-
-
 class Sidebar extends Component {
   constructor(props) {
       super(props);
@@ -78,49 +72,51 @@ class Sidebar extends Component {
     
     return(
         <Router>
-            <div style={{ display: "flex" }}>
-              <div id="sidebar-div">
-                <ul style={{ listStyleType: "none", padding: 0 }}>
-                  <li id="nav-list">
-                    <Link to={mainPage.path}>
-                      {mainPage.name}
-                    </Link>
-                  </li>
-                  {routes.map((route, index) => (
+            <div className="main-div">
+              <div id="left" className="column">
+                <div className="bottom">
+                  <ul>
                     <li id="nav-list">
-                      <Link to={route.path}>
-                        {route.name}
+                      <Link to={mainPage.path}>
+                        {mainPage.name}
                       </Link>
-                      <i onClick={this.deleteTodoList.bind(this, route.id)} className="fa fa-trash"></i>
                     </li>
-                  ))}
-
-                </ul>
-
-                {routes.map((route, index) => (
-                  <Route
-                    key={index}
-                    path={route.path}
-                    exact={route.exact}
-                    component={route.sidebar}
-                  />
-                ))}
+                    {routes.map((route, index) => (
+                      <li id="nav-list">
+                        <Link to={route.path}>
+                          {route.name}
+                        </Link>
+                        <i onClick={this.deleteTodoList.bind(this, route.id)} className="fa fa-trash"></i>
+                      </li>
+                    ))}
+                  </ul>               
+                  {/* {routes.map((route, index) => (
+                    <Route
+                      key={index}
+                      path={route.path}
+                      exact={route.exact}
+                      component={route.sidebar}
+                    />
+                  ))} */}
+                </div>
               </div>
 
-              <div id="content-div">
-                <Route
-                    path={mainPage.path}
-                    exact={mainPage.exact}
-                    component={mainPage.main}
-                />
-                {routes.map((route, index) => (
+              <div className="column">
+                <div className="bottom">
                   <Route
-                    key={index}
-                    path={route.path}
-                    exact={route.exact}
-                    component={route.main}
+                      path={mainPage.path}
+                      exact={mainPage.exact}
+                      component={mainPage.main}
                   />
-                ))}
+                  {routes.map((route, index) => (
+                    <Route
+                      key={index}
+                      path={route.path}
+                      exact={route.exact}
+                      component={route.main}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           </Router>
