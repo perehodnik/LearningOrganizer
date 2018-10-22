@@ -17,10 +17,8 @@ module.exports = function(app) {
     .delete(todoList.delete_a_todolist)
     .post(todoList.create_a_todo);
 
-
+  // todo Routes
   app.route('/todolists/:todoListId/:todoId')
-    .get(todoList.read_a_todo)
-    .put(todoList.update_a_todo)
     .delete(todoList.delete_a_todo);
 
 

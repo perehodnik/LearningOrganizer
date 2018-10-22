@@ -3,8 +3,6 @@
 
 var mongoose = require('mongoose'),
         Todo = mongoose.model('Todo'),
-        Todo2 = mongoose.model('Todo2'),
-     todoMap = {'todos':Todo, 'todo2':Todo2},
         Todolist = mongoose.model('Todolist');
 
 exports.create_a_todolist = function(req, res){
@@ -45,17 +43,6 @@ exports.delete_a_todolist = function(req, res) {
   });
 };
 
-exports.list_all_todos = function(req, res) {
-  todoMap[req.params.todoListId].find({}, function(err, todo) {
-    if (err) {
-      res.send(err)};
-    res.json(todo);
-  });
-};
-
-
-
-
 exports.create_a_todo = function(req, res) {
   var new_todo = new Todo(req.body);
   Todolist.findById(req.params.todoListId, function(err, todolist) {
@@ -71,23 +58,6 @@ exports.create_a_todo = function(req, res) {
   });
 };
 
-
-exports.read_a_todo = function(req, res) {
-  todoMap[req.params.todoListId].findById(req.params.todoId, function(err, todo) {
-    if (err) {
-      res.send(err)};
-    res.json(todo);
-  });
-};
-
-
-exports.update_a_todo = function(req, res) {
-  todoMap[req.params.todoListId].findOneAndUpdate({_id: req.params.todoId}, req.body, {new: true}, function(err, todo) {
-    if (err) {
-      res.send(err)};
-    res.json(todo);
-  });
-};
 
 
 exports.delete_a_todo = function(req, res) {

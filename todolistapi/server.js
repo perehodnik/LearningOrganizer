@@ -3,10 +3,9 @@ var express = require('express'),
     port = 8081,
     IP = "127.0.0.1";
     mongoose = require('mongoose'),
-    Todo = require('./api/models/todoListModels'), //created model loading here
+    Todo = require('./api/models/todoListModels'), 
     bodyParser = require('body-parser');
   
-// mongoose instance connection url connection
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/learning_organizer'); 
 
@@ -15,8 +14,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
-var routes = require('./api/routes/todoListRoutes'); //importing route
-routes(app); //register the route
+var routes = require('./api/routes/todoListRoutes');
+routes(app); 
 
 
 app.listen(port, IP);

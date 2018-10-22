@@ -19,9 +19,7 @@ export async function destroyTodo(apiurl, goneTodoId) {
 export async function postTodoList(apiurl, newTodoList) {
     return axios.post(apiurl, newTodoList)
     .then(data => data.data)
-    .catch(function (error) {
-        console.log(error);
-    });
+    .catch(error => error);
 }
 
 export async function destroyTodoList(apiurl, goneTodoListId) {

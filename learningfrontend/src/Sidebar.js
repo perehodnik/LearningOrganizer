@@ -51,14 +51,19 @@ class Sidebar extends Component {
   async addTodoList (newTodoList) {
     let reply = await apiCalls.postTodoList(this.apiurl, {todoListName: newTodoList});
     console.log(reply);
-    let addedTodoList = {
-        name: reply.todoListName,
-        path: `/${reply.todoListName}`,
-        exact: true,
-        sidebar: () => <div>{reply.todoListName}</div>,
-        main: () => <TodoList apiurl={`http://167.99.180.165/api/todolists/${reply._id}`} />
+    if (reply['code']) {
+        alert("Please enter a unique todolist name");
     }
-    this.setState({routes: [...this.state.routes, addedTodoList]});
+    else {
+      let addedTodoList = {
+          name: reply.todoListName,
+          path: `/${reply.todoListName}`,
+          exact: true,
+          sidebar: () => <div>{reply.todoListName}</div>,
+          main: () => <TodoList apiurl={`http://167.99.180.165/api/todolists/${reply._id}`} />
+      }
+      this.setState({routes: [...this.state.routes, addedTodoList]});
+    }
   }
   async deleteTodoList (goneTodoListId) {
     await apiCalls.destroyTodoList(this.apiurl, goneTodoListId);
