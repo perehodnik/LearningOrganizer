@@ -60,7 +60,10 @@ class Sidebar extends Component {
           path: `/${reply.todoListName}`,
           exact: true,
           sidebar: () => <div>{reply.todoListName}</div>,
-          main: () => <TodoList apiurl={`http://167.99.180.165/api/todolists/${reply._id}`} />
+          main: () => <TodoList 
+            apiurl={`http://167.99.180.165/api/todolists/${reply._id}`} 
+            name={reply.todoListName}
+            />
       }
       this.setState({routes: [...this.state.routes, addedTodoList]});
     }
