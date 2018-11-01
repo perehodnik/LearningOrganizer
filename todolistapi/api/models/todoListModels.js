@@ -1,6 +1,7 @@
 'use strict';
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const User = require("./user");
 
 
 var TodoSchema = new Schema({
@@ -24,8 +25,28 @@ var TodoListSchema = new Schema({
     required: 'Please enter the name of the todolist',
     unique: 'Please do not use a duplicate name for the todolist'
   },
-  todoList: [TodoSchema]
+  todoList: [TodoSchema],
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  }
 });
 
-module.exports = mongoose.model('Todo', TodoSchema);
-module.exports = mongoose.model('Todolist', TodoListSchema);
+TodoListSchema.pre("remove", async function(next) {
+  try {
+    // find a user
+    let user = await User.findById(this.user);
+    // remove the id of the message from their messages list
+    user.todolists.remove(this.id);
+    // save that user
+    await user.save();
+    // return next
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+});
+
+module.exports.Todolist = mongoose.model('Todolist', TodoListSchema);
+module.exports.Todo = mongoose.model('Todo', TodoSchema);
+

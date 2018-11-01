@@ -14,8 +14,22 @@ class TodoList extends Component {
     componentWillMount(){
         this.loadTodos();
     }
-    loadTodos(){
-        fetch(this.props.apiurl)
+    authHeader() {
+        // return authorization header with jwt token
+        let user = JSON.parse(localStorage.getItem('user'));
+    
+        if (user && user.token) {
+            return { 'Authorization': 'Bearer ' + user.token };
+        } else {
+            return {};
+        }
+    }
+    async loadTodos(){
+        const requestOptions = {
+            method: 'GET',
+            headers: this.authHeader()
+        };
+        await fetch(this.props.apiurl, requestOptions)
         .then(data => data.json())
         .then(todos => this.setState({todos}));
     }

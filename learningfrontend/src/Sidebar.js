@@ -2,35 +2,92 @@ import React, {Component} from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import TodoList from './TodoList';
 import TodoInput from './TodoInput';
+import SignIn from './SignIn';
 import * as apiCalls from './api';
+import Navbar from './Navbar';
+import Mainpage from './Mainpage';
 
 class Sidebar extends Component {
   constructor(props) {
       super(props);
       this.state = {
+          currentUser: '',
           main: {
             name: "Home",
             path: "/",
             exact: true,
             sidebar: () => "",
-            main: () => <div>
-                          <h2>Home</h2>
-                          <TodoInput 
-                            handleEnter={this.addTodoList}
-                            placeholder="todolist"
-                          />
-                        </div>
+            main: () => <Mainpage
+            addTodoList={this.addTodoList}
+            currentUser={this.state.currentUser}
+            />,
           },
           routes: []
       }
-      this.apiurl = 'http://167.99.180.165/api/todolists';
+      this.apiurl = 'http://167.99.180.165/api/';
       this.addTodoList = this.addTodoList.bind(this);
+      this.auth = this.auth.bind(this);
+      this.logout = this.logout.bind(this);
   }
   componentWillMount(){
-      this.retrieveTodolists();
-  } 
-  retrieveTodolists(){
-    fetch(this.apiurl)
+      let user = JSON.parse(localStorage.getItem('user'));
+      if (user) {
+        this.setState({currentUser: user.username});
+        apiCalls.setTokenHeader(user.token);
+        this.retrieveTodolists();
+      }
+  }
+
+  async auth(type, userData) {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+    };
+    const apiurl = `${this.apiurl}auth/${type}`;
+    await fetch(apiurl, requestOptions)
+        .then((response) => response.json())
+        .then((response) => {
+            // login successful if there's a jwt token in the response
+            if (response.token) {
+                // store user details and jwt token in local storage to keep user logged in between page refreshes
+                localStorage.setItem('user', JSON.stringify(response));
+                apiCalls.setTokenHeader(response.token);
+                this.setState({currentUser: response.username});
+                this.retrieveTodolists();
+            }
+        });
+    }
+  logout() {
+      // remove user from local storage to log user out
+      localStorage.removeItem('user');
+      this.setState({currentUser: '', routes: []});
+      apiCalls.setTokenHeader();
+  }
+
+  authHeader() {
+      // return authorization header with jwt token
+      let user = JSON.parse(localStorage.getItem('user'));
+  
+      if (user && user.token) {
+          return { 'Authorization': 'Bearer ' + user.token };
+      } else {
+          return {};
+      }
+  }
+  getUserId(){
+      let user = JSON.parse(localStorage.getItem('user'));
+      if (user && user.id) {
+        return user.id;
+      }
+  }
+  async retrieveTodolists(){
+    const requestOptions = {
+      method: 'GET',
+      headers: this.authHeader()
+    };
+    const userId = this.getUserId();
+    await fetch(`${this.apiurl}users/${userId}/todolists`, requestOptions)
     .then(res => res.json())
     .then(todoListArray => (
       todoListArray.map(list => (
@@ -40,7 +97,7 @@ class Sidebar extends Component {
           exact: true,
           sidebar: () => <div>{list._id}</div>,
           main: () => <TodoList 
-              apiurl={`http://167.99.180.165/api/todolists/${list._id}`}
+              apiurl={`${this.apiurl}users/${userId}/todolists/${list._id}`}
               name={list.todoListName}
           />,
           id: list._id
@@ -49,7 +106,8 @@ class Sidebar extends Component {
     .then(todoListArray => this.setState({routes: [...this.state.routes, ...todoListArray]}));
   }
   async addTodoList (newTodoList) {
-    let reply = await apiCalls.postTodoList(this.apiurl, {todoListName: newTodoList});
+    const userId = this.getUserId();
+    let reply = await apiCalls.postTodoList(`${this.apiurl}users/${userId}/todolists`, {todoListName: newTodoList});
     console.log(reply);
     if (reply['code']) {
         alert("Please enter a unique todolist name");
@@ -69,7 +127,8 @@ class Sidebar extends Component {
     }
   }
   async deleteTodoList (goneTodoListId) {
-    await apiCalls.destroyTodoList(this.apiurl, goneTodoListId);
+    const userId = this.getUserId();
+    await apiCalls.destroyTodoList(`${this.apiurl}users/${userId}/todolists`, goneTodoListId);
     const routes = this.state.routes.filter(route => route.id !==goneTodoListId);
     this.setState({routes});
   }
@@ -85,9 +144,7 @@ class Sidebar extends Component {
                 <div className="bottom">
                   <ul>
                     <li id="nav-list">
-                      <Link to={mainPage.path}>
-                        {mainPage.name}
-                      </Link>
+                      TODOLISTS:
                     </li>
                     {routes.map((route, index) => (
                       <li id="nav-list">
@@ -98,18 +155,13 @@ class Sidebar extends Component {
                       </li>
                     ))}
                   </ul>               
-                  {/* {routes.map((route, index) => (
-                    <Route
-                      key={index}
-                      path={route.path}
-                      exact={route.exact}
-                      component={route.sidebar}
-                    />
-                  ))} */}
                 </div>
               </div>
 
               <div className="column">
+                <div>
+                  <Navbar logout={this.logout} currentUser={this.state.currentUser}/>
+                </div>
                 <div className="bottom">
                   <Route
                       path={mainPage.path}
@@ -124,6 +176,20 @@ class Sidebar extends Component {
                       component={route.main}
                     />
                   ))}
+                  <Route 
+                      path="/signin"
+                      component={() => <SignIn 
+                        handleSignin={this.auth}
+                        signUp={false} 
+                        />}                      
+                  />
+                  <Route 
+                      path="/signup"
+                      component={() => <SignIn 
+                        handleSignin={this.auth}
+                        signUp={true} 
+                        />}                      
+                  />
                 </div>
               </div>
             </div>

@@ -1,5 +1,13 @@
 import axios from 'axios';
 
+export function setTokenHeader(token) {
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    } else {
+      delete axios.defaults.headers.common["Authorization"];
+    }
+}
+
 export async function postTodo(apiurl, newTodo) {
     return axios.post(apiurl, newTodo)
     .then(data => data.data)

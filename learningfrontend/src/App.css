@@ -5,7 +5,7 @@ html {
   }
 
 body {
-	background-image: url("https://source.unsplash.com/featured/?nature,water");
+	background-image: url('kristjan-sverrisson-1126393-unsplash.jpg');
 	background-size: cover;
 	height:  100%;
     margin:  0px auto;
@@ -59,7 +59,7 @@ ul {
 	margin: 100px auto;
 	background: #741a1a;
 	box-shadow: 0 0 3px rgba(0,0,0, 0.1);
-	opacity: 0.9;
+	opacity: 0.75;
 }
 
 li:nth-child(2n){
@@ -75,6 +75,37 @@ li {
 
 li#nav-list {
 	padding-left: 5px;
+}
+
+li.nav-user {
+	margin: 5px;
+	background: none;
+	color: rgb(173, 146, 135);
+}
+
+li.nav-text {
+	margin: 5px;
+	background: none;
+	color: rgb(87, 60, 117);
+}
+
+li.nav-status {
+	margin: 5px;
+	background: none;
+}
+
+li.logout {
+	margin: 5px;
+	background: none;
+	cursor: pointer;
+}
+
+.link {
+	color: #317dce;
+}
+
+li.logout:hover {
+	color: rgb(66, 173, 219);
 }
 
 input {
@@ -97,7 +128,7 @@ input:focus{
 	display: flex;
 	flex-direction: column;
 	height: 100%;
-	background: #151b26;
+	background: #040d1d;
 	flex-shrink: 0;
 }
 
@@ -134,8 +165,18 @@ input:focus{
 #left {
 	width: 150px;
 	max-width: 500px;
-	background-color: rgb(69, 50, 104);
+	background-color: rgb(2, 29, 5);
+	opacity: 0.7;
 }
+
+.main-component {
+	opacity: 0.75;
+}
+
+.button-opacity {
+	opacity: 1;
+}
+
 .bottom {
 	flex-grow: 1;
 	overflow-y: auto;
