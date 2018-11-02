@@ -8,9 +8,12 @@ const   errorHandler = require("./api/controllers/error");
 const   authRoutes = require("./api/routes/auth");
 const   { loginRequired, ensureCorrectUser } = require("./api/middleware/auth");
 const   todolistRoutes = require('./api/routes/todoListRoutes');
+const   cors = require("cors");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use(cors());
 
 app.use("/auth", authRoutes);
 
