@@ -39,22 +39,16 @@ class SignIn extends Component {
 
     render() {
         const { email, password, submitted, username } = this.state;
+        const type = (()=>this.props.signUp? "Signup":"Login")();
         return (
             <div className="col-md-6 col-md-offset-3">
-                <h2>Login</h2>
+                <h2>{type}</h2>
                 <form name="form" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !email ? ' has-error' : '')}>
                         <label htmlFor="email">Email</label>
                         <input type="text" className="form-control" name="email" value={email} onChange={this.handleChange} />
                         {submitted && !email &&
                             <div className="help-block">Email is required</div>
-                        }
-                    </div>
-                    <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
-                        <label htmlFor="password">Password</label>
-                        <input type="password" className="form-control" name="password" value={password} onChange={this.handleChange} />
-                        {submitted && !password &&
-                            <div className="help-block">Password is required</div>
                         }
                     </div>
                     {this.props.signUp && (
@@ -66,8 +60,15 @@ class SignIn extends Component {
                         }
                     </div>
                     )}
+                    <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
+                        <label htmlFor="password">Password</label>
+                        <input type="password" className="form-control" name="password" value={password} onChange={this.handleChange} />
+                        {submitted && !password &&
+                            <div className="help-block">Password is required</div>
+                        }
+                    </div>
                     <div className="form-group">
-                        <button className="btn btn-primary">Login</button>
+                        <button className="btn btn-primary">{type}</button>
                     </div>
                 </form>
                 </div>

@@ -48,9 +48,7 @@ class Sidebar extends Component {
     await fetch(apiurl, requestOptions)
         .then((response) => response.json())
         .then((response) => {
-            // login successful if there's a jwt token in the response
             if (response.token) {
-                // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(response));
                 apiCalls.setTokenHeader(response.token);
                 this.setState({currentUser: response.username});
@@ -59,16 +57,13 @@ class Sidebar extends Component {
         });
     }
   logout() {
-      // remove user from local storage to log user out
       localStorage.removeItem('user');
       this.setState({currentUser: '', routes: []});
       apiCalls.setTokenHeader();
   }
 
   authHeader() {
-      // return authorization header with jwt token
       let user = JSON.parse(localStorage.getItem('user'));
-  
       if (user && user.token) {
           return { 'Authorization': 'Bearer ' + user.token };
       } else {
@@ -93,7 +88,7 @@ class Sidebar extends Component {
       todoListArray.map(list => (
         {
           name: list.todoListName,
-          path: `/${list.todoListName}`,
+          path: `/${list._id}`,
           exact: true,
           sidebar: () => <div>{list._id}</div>,
           main: () => <TodoList 
@@ -115,13 +110,14 @@ class Sidebar extends Component {
     else {
       let addedTodoList = {
           name: reply.todoListName,
-          path: `/${reply.todoListName}`,
+          path: `/${reply._id}`,
           exact: true,
           sidebar: () => <div>{reply.todoListName}</div>,
           main: () => <TodoList 
-            apiurl={`http://167.99.180.165/api/todolists/${reply._id}`} 
+            apiurl={`${this.apiurl}users/${userId}/todolists/${reply._id}`}
             name={reply.todoListName}
-            />
+            />,
+          id: reply._id
       }
       this.setState({routes: [...this.state.routes, addedTodoList]});
     }

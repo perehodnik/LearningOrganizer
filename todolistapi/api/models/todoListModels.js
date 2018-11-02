@@ -22,8 +22,7 @@ var TodoSchema = new Schema({
 var TodoListSchema = new Schema({
   todoListName: {
     type: String,
-    required: 'Please enter the name of the todolist',
-    unique: 'Please do not use a duplicate name for the todolist'
+    required: 'Please enter the name of the todolist'
   },
   todoList: [TodoSchema],
   user: {
@@ -34,13 +33,9 @@ var TodoListSchema = new Schema({
 
 TodoListSchema.pre("remove", async function(next) {
   try {
-    // find a user
     let user = await User.findById(this.user);
-    // remove the id of the message from their messages list
     user.todolists.remove(this.id);
-    // save that user
     await user.save();
-    // return next
     return next();
   } catch (err) {
     return next(err);

@@ -14,8 +14,8 @@ class Mainpage extends Component {
           />
           ):
           (     <div className="button-opacity">
-                <Link className="btn btn-primary" to="/signin">Signin</Link>
-                <Link className="btn btn-secondary" to="/signup">Signup instead</Link>
+                <Link className="btn btn-primary button-margin" to="/signin">Signin</Link>
+                <Link className="btn btn-secondary button-margin" to="/signup">Signup</Link>
                 </div>
           )
           }

@@ -176,6 +176,9 @@ input:focus{
 .button-opacity {
 	opacity: 1;
 }
+.button-margin{
+	margin: 10px;
+}
 
 .bottom {
 	flex-grow: 1;
